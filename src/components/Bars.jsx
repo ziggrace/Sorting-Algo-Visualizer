@@ -1,99 +1,179 @@
-import React, { useEffect, useState, componentDidMount } from "react";
+import React, { useEffect, useState } from "react";
 import Bar from "./Bar.jsx";
 
 const Bars = ({ numBars }) => {
   const [bars, setBars] = useState([]);
-  const [sorting, setSorting] = useState(false)
+  const [sorting, setSorting] = useState(false);
+  const [timeMult, setTimeMult] = useState(1)
 
-  //let timer1 = setTimeout(() => setShowLoading(true), 1000)
-
-//   useEffect(
-//     () => {
-//       return () => {
-//         clearTimeout(timer1)
-//       }
-//     },
-//     [sorting]
-//   )
+  useEffect(() => {
+    setBars(createBars(numBars));
+  }, [numBars]);
 
   const createBars = (numBars) => {
-    //console.log(numBars);
     const newBars = [];
     for (let val = 0; val < numBars; val++) {
       newBars.push(
         <Bar
           length={100 / numBars}
           height={10 + Math.random() * 90}
-          color="blue"
+          id={val}
+          color="red"
         />
       );
     }
-    //console.log(newBars);
     return newBars;
   };
 
-  const shuffle = () => {
-    const copy = [...bars];
-    for (let i = bars.length - 1; i > 0; i--) {
-      //console.log("len", copy[i].props.height);
-      const randomIndex = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]];
-    }
-    setBars(copy);
-  };
 
-//   function swap(arr, i, j, n){
-//     // console.log("yo");
-//     // [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]]
-//     // setBars(arr)
-//     // setTimeout(()=>{}, 1000)
-//     if (i < n - 1)
-//     return
+//   const updateColor = () =>{
+
 //   }
 
-  const changeColor = (cur, j2, j1, time) => {
+//   const memoizedHandleClick = useCallback(
+//     () => {
+//         console.log("updating")
+//         setColor("purple")
+//     },
+//     [], // Tells React to memoize regardless of arguments.
+//   )
+
+  const shuffle = () => {
+    const copy = [...bars];
+    let time = 0
+    for (let i = bars.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]];
+      time ++
+      visualSwap(copy, i, randomIndex, time);
+    }
+    visualSwap(copy, 0, 1, time)
+    //console.log(bars)
+  };
+
+  const visualSwap = (cur, j2, j1, time) => {
     const arr = [...cur];
+    arr[j1] = <Bar length={arr[j1].props.length} height={arr[j1].props.height} id={arr[j1].props.id} color="blue"/>
+    arr[j2] = <Bar length={arr[j2].props.length} height={arr[j2].props.height} id={arr[j2].props.id} color="blue"/>;
     [arr[j2], arr[j1]] = [arr[j1], arr[j2]];
-    console.log(j2, j1)
-    console.log(arr.map((val)=>val.props.height))
-    setTimeout(()=>{
-        // console.log("new")
-        // console.log(j2, j1)
-        // arr.forEach(obj=>console.log(obj.props.height));
-        setBars(arr)
-    }, time * 100)
+    setTimeout(() => {
+      setBars(arr);
+    }, time * 100);
+    setTimeout(() =>{
+      console.log(j1, j2)
+      arr[j1] = <Bar length={arr[j1].props.length} height={arr[j1].props.height} id={arr[j1].props.id} color="red"/>
+      arr[j2] = <Bar length={arr[j2].props.length} height={arr[j2].props.height} id={arr[j2].props.id} color="red"/>;
+      //console.log("bars", bars[j1], bars[j2])
+      console.log(bars)
+      setBars(arr)
+    }, (time + 1) * 100)
   }
+  ;
+
+  const visualMerge = () => {
+
+  }
+
   // An optimized version of Bubble Sort
   function bubbleSort() {
-    const arr = [...bars]
-    const n = arr.length
+    const arr = [...bars];
+    const n = arr.length;
     var i, j;
-    let timeMultiplier = 0
-    setSorting(true)
+    let timeMultiplier = 0;
+    setSorting(true);
     for (i = 0; i < n - 1; i++) {
       for (j = 0; j < n - i - 1; j++) {
         if (arr[j].props.height > arr[j + 1].props.height) {
-            changeColor(arr, j + 1, j, timeMultiplier);
-            [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
-            //console.log(j+1, j)
-            timeMultiplier ++
+          [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
+          //console.log(j+1, j)
+          timeMultiplier++;
+          visualSwap(arr, j + 1, j, timeMultiplier);
         }
       }
     }
-    setTimeout(()=>setSorting(false), timeMultiplier * 100)
+    setTimeout(() => setSorting(false), timeMultiplier * 100);
+  }
+  function merge(arr, l, m, r) {
+    console.log(l, m, r)
+    var n1 = m - l + 1;
+    var n2 = r - m;
+
+    // Create temp arrays
+    var L = new Array(n1);
+    var R = new Array(n2);
+
+    // Copy data to temp arrays L[] and R[]
+    for (var i = 0; i < n1; i++) L[i] = arr[l + i];
+    for (var j = 0; j < n2; j++) R[j] = arr[m + 1 + j];
+
+    // Merge the temp arrays back into arr[l..r]
+
+    // Initial index of first subarray
+    var i = 0;
+
+    // Initial index of second subarray
+    var j = 0;
+
+    // Initial index of merged subarray
+    var k = l;
+
+    while (i < n1 && j < n2) {
+      if (L[i].props.height <= R[j].props.height) {
+        arr[k] = L[i];
+        i++;
+      } else {
+        arr[k] = R[j];
+        j++;
+      }
+      k++;
+    }
+
+    // Copy the remaining elements of
+    // L[], if there are any
+    while (i < n1) {
+      arr[k] = L[i];
+      i++;
+      k++;
+    }
+
+    // Copy the remaining elements of
+    // R[], if there are any
+    while (j < n2) {
+      arr[k] = R[j];
+      j++;
+      k++;
+    }
+
+    visualMerge(arr)
+    setTimeMult(timeMult + 1)
   }
 
-  useEffect(() => {
-    setBars(createBars(numBars));
-  }, [numBars]);
+  // l is for left index and r is
+  // right index of the sub-array
+  // of arr to be sorted */
+  function mergeSort(arr, l, r) {
+    if (l >= r) {
+      return; //returns recursively
+    }
+    var m = l + parseInt((r - l) / 2);
+    mergeSort(arr, l, m);
+    mergeSort(arr, m + 1, r);
+    merge(arr, l, m, r);
+    setTimeMult(1);
+  }
 
   // console.log(bars)
   // console.log(numBars)
   return (
     //const bars = []
     <div className="barsContainer">
-      <button onClick={shuffle} disabled={sorting}>Shuffle</button>
+      <button onClick={shuffle} disabled={sorting}>
+        Shuffle
+      </button>
       <button onClick={bubbleSort}>Bubble Sort</button>
+      <button onClick={() => mergeSort([...bars], 0, bars.length - 1)}>
+        Merge Sort
+      </button>
       <div className="bars">{bars}</div>
     </div>
   );
