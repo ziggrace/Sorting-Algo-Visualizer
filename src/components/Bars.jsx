@@ -14,12 +14,12 @@ const Bars = ({ numBars }) => {
     const newBars = [];
     for (let val = 0; val < numBars; val++) {
       newBars.push(
-        <Bar
-          length={100 / numBars}
-          height={10 + Math.random() * 90}
-          id={val}
-          color="red"
-        />
+        {
+          length: 100 / numBars,
+          height: 10 + Math.random() * 90,
+          id:val,
+          color:"red"
+        }
       );
     }
     return newBars;
@@ -53,18 +53,26 @@ const Bars = ({ numBars }) => {
 
   const visualSwap = (cur, j2, j1, time) => {
     const arr = [...cur];
-    arr[j1] = <Bar length={arr[j1].props.length} height={arr[j1].props.height} id={arr[j1].props.id} color="blue"/>
-    arr[j2] = <Bar length={arr[j2].props.length} height={arr[j2].props.height} id={arr[j2].props.id} color="blue"/>;
+    // arr[j1] = <Bar length={arr[j1].props.length} height={arr[j1].props.height} id={arr[j1].props.id} color="blue"/>
+    // arr[j2] = <Bar length={arr[j2].props.length} height={arr[j2].props.height} id={arr[j2].props.id} color="blue"/>;
+    // Object.assign(arr[j1], {color: "blue"})
+    // Object.assign(arr[j2], {color: "blue"})
     [arr[j2], arr[j1]] = [arr[j1], arr[j2]];
     setTimeout(() => {
+      [arr[j2], arr[j1]] = [arr[j1], arr[j2]];
+      console.log(arr)
+      console.log(arr[j1], arr[j2])
+      Object.assign(arr[j1], {color: "blue"})
+      Object.assign(arr[j2], {color: "blue"})
       setBars(arr);
     }, time * 100);
     setTimeout(() =>{
       console.log(j1, j2)
-      arr[j1] = <Bar length={arr[j1].props.length} height={arr[j1].props.height} id={arr[j1].props.id} color="red"/>
-      arr[j2] = <Bar length={arr[j2].props.length} height={arr[j2].props.height} id={arr[j2].props.id} color="red"/>;
+      // arr[j1] = <Bar length={arr[j1].props.length} height={arr[j1].props.height} id={arr[j1].props.id} color="red"/>
+      Object.assign(arr[j1], {color: "red"})
+      // arr[j2] = <Bar length={arr[j2].props.length} height={arr[j2].props.height} id={arr[j2].props.id} color="red"/>;
+      Object.assign(arr[j2], {color: "red"})
       //console.log("bars", bars[j1], bars[j2])
-      console.log(bars)
       setBars(arr)
     }, (time + 1) * 100)
   }
@@ -83,17 +91,21 @@ const Bars = ({ numBars }) => {
     setSorting(true);
     for (i = 0; i < n - 1; i++) {
       for (j = 0; j < n - i - 1; j++) {
-        if (arr[j].props.height > arr[j + 1].props.height) {
+        if (arr[j].height > arr[j + 1].height) {
           [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
           //console.log(j+1, j)
           timeMultiplier++;
+          console.log("from swap", j+1, j)
           visualSwap(arr, j + 1, j, timeMultiplier);
+          //[arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
         }
       }
     }
+    visualSwap(arr, 0, 1, timeMultiplier)
     setTimeout(() => setSorting(false), timeMultiplier * 100);
   }
   function merge(arr, l, m, r) {
+    console.log(l, m, r)
     console.log(l, m, r)
     var n1 = m - l + 1;
     var n2 = r - m;
@@ -118,7 +130,7 @@ const Bars = ({ numBars }) => {
     var k = l;
 
     while (i < n1 && j < n2) {
-      if (L[i].props.height <= R[j].props.height) {
+      if (L[i].height <= R[j].height) {
         arr[k] = L[i];
         i++;
       } else {
@@ -174,7 +186,7 @@ const Bars = ({ numBars }) => {
       <button onClick={() => mergeSort([...bars], 0, bars.length - 1)}>
         Merge Sort
       </button>
-      <div className="bars">{bars}</div>
+      <div className="bars">{bars.map(bar=><Bar length={bar.length} height={bar.height} color={bar.color} id={bar.id}/>)}</div>
     </div>
   );
 };

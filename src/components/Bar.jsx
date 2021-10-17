@@ -9,7 +9,7 @@ const Bar = ({length, height, id, color}) => {
     // }
 
     return (
-        <div style={{ border: `1px solid ${color}`, height: `${height}%`, width: `${length}%`, id: {id}}}>
+        <div style={{ backgroundColor: `${color}`, border: '1px solid black', height: `${height}%`, width: `${length}%`, id: {id}}}>
         </div>
     )
 }
