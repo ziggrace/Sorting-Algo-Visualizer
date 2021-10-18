@@ -16,9 +16,10 @@ function App() {
 
   return (
     <div className="App">
-      <form onSubmit={e=>updateBars(e)}>
+      <form>
         <input value={curBars} onChange={(e)=>setCurBars(e.target.value)} ></input>
-        <input type="submit" value="Update Number of Bars" />
+        <span></span>
+        <button disabled={curBars > 200 || curBars <= 0} onClick={e => {if(curBars <= 200 && curBars >0) updateBars(e)}}>Update Number of Bars (Max 200)</button>
       </form>
       {/* <button onClick={updateBars}>Change Number of Bars</button> */}
       <Bars numBars={numBars}/>
