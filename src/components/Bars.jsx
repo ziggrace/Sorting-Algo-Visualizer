@@ -4,7 +4,7 @@ import Bar from "./Bar.jsx";
 const Bars = ({ numBars }) => {
   const [bars, setBars] = useState([]);
   const [sorting, setSorting] = useState(false);
-  const [timeMult, setTimeMult] = useState(1)
+  //const [timeMult, setTimeMult] = useState(1)
 
   useEffect(() => {
     setBars(createBars(numBars));
@@ -53,10 +53,6 @@ const Bars = ({ numBars }) => {
 
   const visualSwap = (cur, j2, j1, time) => {
     const arr = [...cur];
-    // arr[j1] = <Bar length={arr[j1].props.length} height={arr[j1].props.height} id={arr[j1].props.id} color="blue"/>
-    // arr[j2] = <Bar length={arr[j2].props.length} height={arr[j2].props.height} id={arr[j2].props.id} color="blue"/>;
-    // Object.assign(arr[j1], {color: "blue"})
-    // Object.assign(arr[j2], {color: "blue"})
     [arr[j2], arr[j1]] = [arr[j1], arr[j2]];
     setTimeout(() => {
       [arr[j2], arr[j1]] = [arr[j1], arr[j2]];
@@ -65,20 +61,56 @@ const Bars = ({ numBars }) => {
       Object.assign(arr[j1], {color: "blue"})
       Object.assign(arr[j2], {color: "blue"})
       setBars(arr);
-    }, time * 100);
+    }, time * 500);
     setTimeout(() =>{
       const newArr = [...arr]
       console.log(j1, j2)
-      // arr[j1] = <Bar length={arr[j1].props.length} height={arr[j1].props.height} id={arr[j1].props.id} color="red"/>
       Object.assign(newArr[j1], {color: "red"})
-      // arr[j2] = <Bar length={arr[j2].props.length} height={arr[j2].props.height} id={arr[j2].props.id} color="red"/>;
       Object.assign(newArr[j2], {color: "red"})
-      //console.log("bars", bars[j1], bars[j2])
       console.log(newArr)
       setBars(newArr)
-    }, (time + 1) * 100)
+    }, (time + 1) * 500)
   }
   ;
+
+  function swap(items, leftIndex, rightIndex){
+    var temp = items[leftIndex];
+    items[leftIndex] = items[rightIndex];
+    items[rightIndex] = temp;
+}
+function partition(items, left, right) {
+    var pivot   = items[Math.floor((right + left) / 2)], //middle element
+        i       = left, //left pointer
+        j       = right; //right pointer
+    while (i <= j) {
+        while (items[i] < pivot) {
+            i++;
+        }
+        while (items[j] > pivot) {
+            j--;
+        }
+        if (i <= j) {
+            swap(items, i, j); //sawpping two elements
+            i++;
+            j--;
+        }
+    }
+    return i;
+}
+
+function quickSort(items, left, right) {
+    var index;
+    if (items.length > 1) {
+        index = partition(items, left, right); //index returned from partition
+        if (left < index - 1) { //more elements on the left side of the pivot
+            quickSort(items, left, index - 1);
+        }
+        if (index < right) { //more elements on the right side of the pivot
+            quickSort(items, index, right);
+        }
+    }
+    return items;
+}
 
   // An optimized version of Bubble Sort
   function bubbleSort() {
@@ -91,45 +123,31 @@ const Bars = ({ numBars }) => {
       for (j = 0; j < n - i - 1; j++) {
         if (arr[j].height > arr[j + 1].height) {
           [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
-          //console.log(j+1, j)
           timeMultiplier++;
           console.log("from swap", j+1, j)
           visualSwap(arr, j + 1, j, timeMultiplier);
-          //[arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
         }
       }
     }
-    //visualSwap(arr, 0, 1, timeMultiplier)
     setTimeout(() => setSorting(false), timeMultiplier * 100);
   }
 
   const visualMerge = () => {
     let time = 1
-    return (arr, l, r) => {
+    return (arr, l, r, m) => {
       console.log(time)
       setTimeout(()=>{
-      //console.log("viz", arr)
-      // const copy = [...bars]
-      // for (let i = l; i<=r; i++){
-      //   copy[i] = arr[i-l]
-      // }
       for (let i = l; i <= r; i++){
           arr[i].color = "blue"
       }
-      //if (l === 0 && r === bars.length - 1) time = 1
       setBars(arr)
     }, time * 1000)
     setTimeout(()=>{
-      //console.log("viz", arr)
-      // const copy = [...bars]
-      // for (let i = l; i<=r; i++){
-      //   copy[i] = arr[i-l]
-      // }
       for (let i = l; i <= r; i++){
           arr[i].color = "red"
       }
       if (l === 0 && r === bars.length - 1) time = 1
-      setBars(arr)
+      setBars([...arr])
     }, (time + 1) * 1000)
     time ++
   }
@@ -139,8 +157,6 @@ const Bars = ({ numBars }) => {
 
 
   function merge(arr, l, m, r, time) {
-    // console.log(arr)
-    // console.log(l, m, r)
     var n1 = m - l + 1;
     var n2 = r - m;
 
@@ -192,7 +208,7 @@ const Bars = ({ numBars }) => {
 
     const copy = [...arr]
 
-    finalVisMerger(copy, l, r)
+    finalVisMerger(copy, l, r, m)
     console.log("incrementing")
   }
 
@@ -225,10 +241,10 @@ const Bars = ({ numBars }) => {
       <button onClick={bubbleSort}>Bubble Sort</button>
       <button onClick={() => {
         mergeSort([...bars], 0, bars.length - 1)
-        setTimeMult(1)
         }}>
         Merge Sort
       </button>
+      <button onClick={quickSort}>Quick Sort</button>
       <div className="bars">
         {bars.map(bar=><Bar length={bar.length} height={bar.height} color={bar.color} id={bar.id}/>)}
       </div>
