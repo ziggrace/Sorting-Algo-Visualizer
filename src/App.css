@@ -27,6 +27,8 @@ html, body {
   justify-content: space-between;
   align-items: end;
   height: 90%;
+  /* border: 5px solid; */
+  margin: 5px solid;
 }
 
 .barsContainer{

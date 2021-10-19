@@ -244,7 +244,7 @@ function quickSort(items, left, right) {
         }}>
         Merge Sort
       </button>
-      <button onClick={quickSort}>Quick Sort</button>
+      {/* <button onClick={quickSort} disabled>Quick Sort</button> */}
       <div className="bars">
         {bars.map(bar=><Bar length={bar.length} height={bar.height} color={bar.color} id={bar.id}/>)}
       </div>
