@@ -18,7 +18,7 @@ function App() {
     <div className="App">
       <form>
         <input value={curBars} onChange={(e)=>setCurBars(e.target.value)} ></input>
-        <button disabled={curBars > 150 || curBars <= 2 || isNaN(+curBars)} onClick={e => {if(curBars <= 200 && curBars >0) updateBars(e)}}>Update Number of Bars (Max 150)</button>
+        <button disabled={curBars > 150 || curBars <= 2 || isNaN(+curBars)} onClick={e => {if(curBars <= 200 && curBars >0) updateBars(e)}} className="update">Update Number of Bars (Max 150)</button>
       </form>
       {/* <button onClick={updateBars}>Change Number of Bars</button> */}
       <Bars numBars={numBars}/>
