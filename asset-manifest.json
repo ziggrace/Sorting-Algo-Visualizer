@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/Sorting-Algo-Visualizer/static/css/main.cb7bbc8f.chunk.css",
-    "main.js": "/Sorting-Algo-Visualizer/static/js/main.1fac7424.chunk.js",
-    "main.js.map": "/Sorting-Algo-Visualizer/static/js/main.1fac7424.chunk.js.map",
+    "main.js": "/Sorting-Algo-Visualizer/static/js/main.a7d76727.chunk.js",
+    "main.js.map": "/Sorting-Algo-Visualizer/static/js/main.a7d76727.chunk.js.map",
     "runtime-main.js": "/Sorting-Algo-Visualizer/static/js/runtime-main.980cfa11.js",
     "runtime-main.js.map": "/Sorting-Algo-Visualizer/static/js/runtime-main.980cfa11.js.map",
     "static/js/2.aaf544a0.chunk.js": "/Sorting-Algo-Visualizer/static/js/2.aaf544a0.chunk.js",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.980cfa11.js",
     "static/js/2.aaf544a0.chunk.js",
     "static/css/main.cb7bbc8f.chunk.css",
-    "static/js/main.1fac7424.chunk.js"
+    "static/js/main.a7d76727.chunk.js"
   ]
 }
