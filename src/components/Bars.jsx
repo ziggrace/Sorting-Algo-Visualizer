@@ -18,7 +18,7 @@ const Bars = ({ numBars }) => {
           length: 100 / numBars,
           height: 10 + Math.random() * 90,
           id:val,
-          color:"red"
+          color:"#3D9970"
         }
       );
     }
@@ -39,6 +39,7 @@ const Bars = ({ numBars }) => {
 //   )
 
   const shuffle = () => {
+    setSorting(true)
     const copy = [...bars];
     let time = 0
     for (let i = bars.length - 1; i > 0; i--) {
@@ -48,6 +49,7 @@ const Bars = ({ numBars }) => {
       visualSwap(copy, i, randomIndex, time);
     }
     visualSwap(copy, 0, 1, time)
+    setTimeout(() => setSorting(false), (time + 1) * 500);
     //console.log(bars)
   };
 
@@ -58,15 +60,15 @@ const Bars = ({ numBars }) => {
       [arr[j2], arr[j1]] = [arr[j1], arr[j2]];
       console.log(arr)
       console.log(arr[j1], arr[j2])
-      Object.assign(arr[j1], {color: "blue"})
-      Object.assign(arr[j2], {color: "blue"})
+      Object.assign(arr[j1], {color: "#7FDBFF"})
+      Object.assign(arr[j2], {color: "#7FDBFF"})
       setBars(arr);
     }, time * 500);
     setTimeout(() =>{
       const newArr = [...arr]
       console.log(j1, j2)
-      Object.assign(newArr[j1], {color: "red"})
-      Object.assign(newArr[j2], {color: "red"})
+      Object.assign(newArr[j1], {color: "#3D9970"})
+      Object.assign(newArr[j2], {color: "#3D9970"})
       console.log(newArr)
       setBars(newArr)
     }, (time + 1) * 500)
@@ -99,6 +101,7 @@ function partition(items, left, right) {
 }
 
 function quickSort(items, left, right) {
+    setSorting(true);
     var index;
     if (items.length > 1) {
         index = partition(items, left, right); //index returned from partition
@@ -129,7 +132,8 @@ function quickSort(items, left, right) {
         }
       }
     }
-    setTimeout(() => setSorting(false), timeMultiplier * 100);
+    console.log("time mult", timeMultiplier)
+    setTimeout(() => setSorting(false), (timeMultiplier + 1) * 500);
   }
 
   const visualMerge = () => {
@@ -138,18 +142,22 @@ function quickSort(items, left, right) {
       console.log(time)
       setTimeout(()=>{
       for (let i = l; i <= r; i++){
-          arr[i].color = "blue"
+          arr[i].color = "#7FDBFF"
       }
       setBars(arr)
     }, time * 1000)
     setTimeout(()=>{
       for (let i = l; i <= r; i++){
-          arr[i].color = "red"
+          arr[i].color = "#3D9970"
       }
-      if (l === 0 && r === bars.length - 1) time = 1
+      if (l === 0 && r === bars.length - 1) {
+        time = 1
+      }
       setBars([...arr])
     }, (time + 1) * 1000)
+    if (l === 0 && r === bars.length - 1) setTimeout(() => setSorting(false), (time + 1) * 1000);
     time ++
+
   }
   }
 
@@ -216,6 +224,7 @@ function quickSort(items, left, right) {
   // right index of the sub-array
   // of arr to be sorted */
   function mergeSort(arr, l, r, time=1) {
+    setSorting(true);
     //const arr = [...bars]
     if (l >= r) {
       return; //returns recursively
@@ -238,8 +247,8 @@ function quickSort(items, left, right) {
       <button onClick={shuffle} disabled={sorting}>
         Shuffle
       </button>
-      <button onClick={bubbleSort}>Bubble Sort</button>
-      <button onClick={() => {
+      <button onClick={bubbleSort} disabled={sorting}>Bubble Sort</button>
+      <button disabled={sorting} onClick={() => {
         mergeSort([...bars], 0, bars.length - 1)
         }}>
         Merge Sort
