@@ -80,15 +80,16 @@ const Bars = ({ numBars }) => {
     items[leftIndex] = items[rightIndex];
     items[rightIndex] = temp;
 }
+
 function partition(items, left, right) {
-    var pivot   = items[Math.floor((right + left) / 2)], //middle element
-        i       = left, //left pointer
-        j       = right; //right pointer
+    var pivot = items[Math.floor((right + left) / 2)].height, //middle element
+        i = left, //left pointer
+        j = right; //right pointer
     while (i <= j) {
-        while (items[i] < pivot) {
+        while (items[i].height < pivot) {
             i++;
         }
-        while (items[j] > pivot) {
+        while (items[j].height > pivot) {
             j--;
         }
         if (i <= j) {
@@ -100,11 +101,15 @@ function partition(items, left, right) {
     return i;
 }
 
-function quickSort(items, left, right) {
+function quickSortOuter (){
+  let time = 1
+  return function quickSort(items, left, right) {
     setSorting(true);
     var index;
     if (items.length > 1) {
         index = partition(items, left, right); //index returned from partition
+        visQuick([...items], left, right, index, time)
+        time ++
         if (left < index - 1) { //more elements on the left side of the pivot
             quickSort(items, left, index - 1);
         }
@@ -112,7 +117,29 @@ function quickSort(items, left, right) {
             quickSort(items, index, right);
         }
     }
+    //setBars(items)
+    console.log(items)
+    setSorting(false)
     return items;
+}
+}
+
+const finalQuickSort = quickSortOuter()
+
+
+const visQuick = (arr, l, r, partition, time) =>{
+  setTimeout(()=>{
+    arr[partition].color = "yellow"
+    arr[l].color = "blue"
+    arr[r].color = "blue"
+    setBars(arr)
+  }, time * 1000)
+  setTimeout(()=>{
+    arr[partition].color = "#3D9970"
+    arr[l].color = "#3D9970"
+    arr[r].color = "#3D9970"
+    setBars([...arr])
+  }, (time + 1) * 1000)
 }
 
   // An optimized version of Bubble Sort
@@ -157,14 +184,13 @@ function quickSort(items, left, right) {
     }, (time + 1) * 1000)
     if (l === 0 && r === bars.length - 1) setTimeout(() => setSorting(false), (time + 1) * 1000);
     time ++
-
   }
   }
 
   const finalVisMerger = visualMerge()
 
 
-  function merge(arr, l, m, r, time) {
+  function merge(arr, l, m, r) {
     var n1 = m - l + 1;
     var n2 = r - m;
 
@@ -253,7 +279,7 @@ function quickSort(items, left, right) {
         }}>
         Merge Sort
       </button>
-      {/* <button onClick={quickSort} disabled>Quick Sort</button> */}
+      <button onClick={()=>finalQuickSort([...bars], 0, bars.length-1)} disabled={sorting}>Quick Sort</button>
       <div className="bars">
         {bars.map(bar=><Bar length={bar.length} height={bar.height} color={bar.color} id={bar.id}/>)}
       </div>
