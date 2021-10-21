@@ -81,24 +81,45 @@ const Bars = ({ numBars }) => {
     items[rightIndex] = temp;
 }
 
-function partition(items, left, right) {
-    var pivot = items[Math.floor((right + left) / 2)].height, //middle element
+function partition(items, left, right, time) {
+    const index = Math.floor((right + left) / 2)
+    var pivot = items[index].height, //middle element
         i = left, //left pointer
         j = right; //right pointer
+    
+    visQuick([...items], left, right, index, time)
+    time ++
     while (i <= j) {
         while (items[i].height < pivot) {
+            // setTimeout(()=>{
+            //   //const copy = [...items]
+            //   items[i].color = "#3D9970"
+            //   items[i+1].color = "blue"
+            //   setBars([...items])
+            // }, time * 1000)
+            visPointerSwitch([...items], i, i+1, time)
+            time ++
             i++;
         }
         while (items[j].height > pivot) {
+            // setTimeout(()=>{
+            //   //const copy = [...items]
+            //   items[j].color = "#3D9970"
+            //   items[j-1].color = "blue"
+            // }, time * 1000)
+            visPointerSwitch([...items], j, j-1, time)
+            time ++
             j--;
         }
         if (i <= j) {
             swap(items, i, j); //sawpping two elements
+            //visualSwap(items, i, j, time)
+            time ++
             i++;
             j--;
         }
     }
-    return i;
+    return [i, time];
 }
 
 function quickSortOuter (){
@@ -107,8 +128,7 @@ function quickSortOuter (){
     setSorting(true);
     var index;
     if (items.length > 1) {
-        index = partition(items, left, right); //index returned from partition
-        visQuick([...items], left, right, index, time)
+        [index, time] = partition(items, left, right, time); //index returned from partition
         time ++
         if (left < index - 1) { //more elements on the left side of the pivot
             quickSort(items, left, index - 1);
@@ -129,9 +149,13 @@ const finalQuickSort = quickSortOuter()
 
 const visQuick = (arr, l, r, partition, time) =>{
   setTimeout(()=>{
+    console.log(partition)
+
     arr[partition].color = "yellow"
     arr[l].color = "blue"
     arr[r].color = "blue"
+    console.log(time)
+    console.log(arr)
     setBars(arr)
   }, time * 1000)
   setTimeout(()=>{
@@ -140,6 +164,23 @@ const visQuick = (arr, l, r, partition, time) =>{
     arr[r].color = "#3D9970"
     setBars([...arr])
   }, (time + 1) * 1000)
+}
+const visPointerSwitch = (arr, oldPointer, newPointer, time) =>{
+  setTimeout(()=>{
+    console.log(partition)
+
+    arr[oldPointer].color = "#3D9970"
+    arr[newPointer].color = "blue"
+    console.log(time)
+    console.log(arr)
+    setBars(arr)
+  }, time * 1000)
+  // setTimeout(()=>{
+  //   arr[partition].color = "#3D9970"
+  //   arr[l].color = "#3D9970"
+  //   arr[r].color = "#3D9970"
+  //   setBars([...arr])
+  // }, (time + 1) * 1000)
 }
 
   // An optimized version of Bubble Sort
