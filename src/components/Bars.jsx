@@ -4,7 +4,6 @@ import Bar from "./Bar.jsx";
 const Bars = ({ numBars }) => {
   const [bars, setBars] = useState([]);
   const [sorting, setSorting] = useState(false);
-  //const [timeMult, setTimeMult] = useState(1)
 
   useEffect(() => {
     setBars(createBars(numBars));
@@ -24,19 +23,6 @@ const Bars = ({ numBars }) => {
     }
     return newBars;
   };
-
-
-//   const updateColor = () =>{
-
-//   }
-
-//   const memoizedHandleClick = useCallback(
-//     () => {
-//         console.log("updating")
-//         setColor("purple")
-//     },
-//     [], // Tells React to memoize regardless of arguments.
-//   )
 
   const shuffle = () => {
     setSorting(true)
@@ -58,18 +44,18 @@ const Bars = ({ numBars }) => {
     [arr[j2], arr[j1]] = [arr[j1], arr[j2]];
     setTimeout(() => {
       [arr[j2], arr[j1]] = [arr[j1], arr[j2]];
-      console.log(arr)
-      console.log(arr[j1], arr[j2])
+      // console.log(arr)
+      // console.log(arr[j1], arr[j2])
       Object.assign(arr[j1], {color: "#7FDBFF"})
       Object.assign(arr[j2], {color: "#7FDBFF"})
       setBars(arr);
     }, time * 500);
     setTimeout(() =>{
       const newArr = [...arr]
-      console.log(j1, j2)
+      // console.log(j1, j2)
       Object.assign(newArr[j1], {color: "#3D9970"})
       Object.assign(newArr[j2], {color: "#3D9970"})
-      console.log(newArr)
+      // console.log(newArr)
       setBars(newArr)
     }, (time + 1) * 500)
   }
@@ -86,45 +72,40 @@ function partition(items, left, right, time) {
     var pivot = items[index].height, //middle element
         i = left, //left pointer
         j = right; //right pointer
-    
-    visQuick([...items], left, right, index, time)
-    time ++
+    visQuick([...items], left, right, index, time++)
+    //time ++
     while (i <= j) {
         while (items[i].height < pivot) {
-            // setTimeout(()=>{
-            //   //const copy = [...items]
-            //   items[i].color = "#3D9970"
-            //   items[i+1].color = "blue"
-            //   setBars([...items])
-            // }, time * 1000)
-            visPointerSwitch([...items], i, i+1, time)
-            time ++
+            visPointerSwitch([...items], i, i+1, time++)
+            //time ++
             i++;
         }
         while (items[j].height > pivot) {
-            // setTimeout(()=>{
-            //   //const copy = [...items]
-            //   items[j].color = "#3D9970"
-            //   items[j-1].color = "blue"
-            // }, time * 1000)
-            visPointerSwitch([...items], j, j-1, time)
-            time ++
+            visPointerSwitch([...items], j, j-1, time++)
+            //time ++
             j--;
         }
         if (i <= j) {
             swap(items, i, j); //sawpping two elements
-            //visualSwap(items, i, j, time)
+            if (j !== i){
+              visPointerSwitch([...items], i, i+1, time)
+              //visualSwap([...items], i, j, time)
+              if (j > 0) visPointerSwitch([...items], j, j-1, time)
+            }
+            //if (j > 0) visPointerSwitch([...items], i, j, time)
             time ++
             i++;
             j--;
         }
     }
+    colorReset([...items], time++)
     return [i, time];
 }
 
 function quickSortOuter (){
   let time = 1
   return function quickSort(items, left, right) {
+    // colorReset(items, time)
     setSorting(true);
     var index;
     if (items.length > 1) {
@@ -138,7 +119,7 @@ function quickSortOuter (){
         }
     }
     //setBars(items)
-    console.log(items)
+    // console.log(items)
     setSorting(false)
     return items;
 }
@@ -149,30 +130,13 @@ const finalQuickSort = quickSortOuter()
 
 const visQuick = (arr, l, r, partition, time) =>{
   setTimeout(()=>{
-    console.log(partition)
+    // console.log(partition)
 
     arr[partition].color = "yellow"
     arr[l].color = "blue"
     arr[r].color = "blue"
-    console.log(time)
-    console.log(arr)
-    setBars(arr)
-  }, time * 1000)
-  setTimeout(()=>{
-    arr[partition].color = "#3D9970"
-    arr[l].color = "#3D9970"
-    arr[r].color = "#3D9970"
-    setBars([...arr])
-  }, (time + 1) * 1000)
-}
-const visPointerSwitch = (arr, oldPointer, newPointer, time) =>{
-  setTimeout(()=>{
-    console.log(partition)
-
-    arr[oldPointer].color = "#3D9970"
-    arr[newPointer].color = "blue"
-    console.log(time)
-    console.log(arr)
+    // console.log(time)
+    // console.log(arr)
     setBars(arr)
   }, time * 1000)
   // setTimeout(()=>{
@@ -181,6 +145,30 @@ const visPointerSwitch = (arr, oldPointer, newPointer, time) =>{
   //   arr[r].color = "#3D9970"
   //   setBars([...arr])
   // }, (time + 1) * 1000)
+}
+const visPointerSwitch = (arr, oldPointer, newPointer, time) =>{
+  setTimeout(()=>{
+    // console.log(partition)
+    console.log(arr, oldPointer, newPointer)
+    arr[oldPointer].color = "#3D9970"
+    arr[newPointer].color = "blue"
+    // console.log(time)
+    // console.log(arr)
+    setBars(arr)
+  }, time * 1000)
+  // setTimeout(()=>{
+  //   arr[partition].color = "#3D9970"
+  //   arr[l].color = "#3D9970"
+  //   arr[r].color = "#3D9970"
+  //   setBars([...arr])
+  // }, (time + 1) * 1000)
+}
+
+const colorReset = (arr, time) => {
+  setTimeout(()=>{
+    for (let obj of arr) obj.color = "#3D9970"
+    setBars(arr)
+  }, time * 1000)
 }
 
   // An optimized version of Bubble Sort
@@ -195,19 +183,16 @@ const visPointerSwitch = (arr, oldPointer, newPointer, time) =>{
         if (arr[j].height > arr[j + 1].height) {
           [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]];
           timeMultiplier++;
-          console.log("from swap", j+1, j)
           visualSwap(arr, j + 1, j, timeMultiplier);
         }
       }
     }
-    console.log("time mult", timeMultiplier)
     setTimeout(() => setSorting(false), (timeMultiplier + 1) * 500);
   }
 
   const visualMerge = () => {
     let time = 1
     return (arr, l, r, m) => {
-      console.log(time)
       setTimeout(()=>{
       for (let i = l; i <= r; i++){
           arr[i].color = "#7FDBFF"
@@ -284,7 +269,7 @@ const visPointerSwitch = (arr, oldPointer, newPointer, time) =>{
     const copy = [...arr]
 
     finalVisMerger(copy, l, r, m)
-    console.log("incrementing")
+    // console.log("incrementing")
   }
 
   // l is for left index and r is
